@@ -1,6 +1,6 @@
-package appl;
+package p01.appl;
 
-import scanner.Scanner;
+import p01.scanner.Scanner;
 
 import java.io.*;
 

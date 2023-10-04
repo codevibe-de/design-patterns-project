@@ -1,4 +1,4 @@
-package scanner;
+package p02.scanner;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -14,21 +14,24 @@ public class Scanner {
         this.readNextChar();
     }
 
-    public Object readSymbol() {
-        final Object result;
+    public Symbol readSymbol() {
+        final Symbol result;
         this.skipWhitespace();
-        if (this.currentChar == -1)
+        // todo why not use factory method for all symbol types below?
+        if (this.currentChar == -1) {
             result = null;
-        else if (Character.isDigit(this.currentChar))
-            result = this.readNumber();
-        else if (Character.isJavaIdentifierStart((char) this.currentChar))
-            result = this.readIdentifier();
-        else if ("+-*/()".indexOf(this.currentChar) >= 0) {
-            final char ch = (char) this.currentChar;
+        } else if (Character.isDigit(this.currentChar)) {
+            result = new NumberSymbol(this.readNumber());
+        } else if (Character.isJavaIdentifierStart((char) this.currentChar)) {
+            result = new IdentifierSymbol(this.readIdentifier());
+        } else {
+            final Symbol symbol = SpecialSymbol.forChar((char) this.currentChar);
+            if (symbol == null) {
+                throw new ScannerException("illegal special symbol: " + (char) this.currentChar);
+            }
             this.readNextChar();
-            result = ch;
-        } else
-            throw new ScannerException("illegal special symbol: " + (char) this.currentChar);
+            result = symbol;
+        }
         return result;
     }
 
@@ -48,9 +51,10 @@ public class Scanner {
                 this.readNextChar();
             }
         }
-        if (Character.isLetter(this.currentChar))
+        if (Character.isLetter(this.currentChar)) {
             throw new ScannerException("a number mustn't end with a letter");
-        return Double.valueOf(buf.toString());
+        }
+        return Double.parseDouble(buf.toString());
     }
 
     private String readIdentifier() {
