@@ -1,4 +1,4 @@
-package p02.scanner;
+package scanner;
 
 import org.junit.jupiter.api.Test;
 
@@ -24,11 +24,29 @@ public class ScannerTest {
     }
 
     @Test
+    public void testNumbersSame() {
+        final Scanner s = new Scanner(new StringReader("42 3.14   77 "));
+        assertSame(s.numberSymbolOf(42), s.readSymbol());
+        assertSame(s.numberSymbolOf(3.14), s.readSymbol());
+        assertSame(s.numberSymbolOf(77), s.readSymbol());
+        assertNull(s.readSymbol());
+    }
+
+    @Test
     public void testIdentifiers() {
         final Scanner s = new Scanner(new StringReader("hello Hello a123"));
         assertEquals(new IdentifierSymbol("hello"), s.readSymbol());
         assertEquals(new IdentifierSymbol("Hello"), s.readSymbol());
         assertEquals(new IdentifierSymbol("a123"), s.readSymbol());
+        assertNull(s.readSymbol());
+    }
+
+    @Test
+    public void testIdentifiersSame() {
+        final Scanner s = new Scanner(new StringReader("hello Hello a123"));
+        assertSame(s.identifierSymbolOf("hello"), s.readSymbol());
+        assertSame(s.identifierSymbolOf("Hello"), s.readSymbol());
+        assertSame(s.identifierSymbolOf("a123"), s.readSymbol());
         assertNull(s.readSymbol());
     }
 

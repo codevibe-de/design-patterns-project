@@ -1,4 +1,4 @@
-package p02.scanner;
+package scanner;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -14,23 +14,21 @@ public class Scanner {
         this.readNextChar();
     }
 
-    public Symbol readSymbol() {
-        final Symbol result;
+    public Object readSymbol() {
+        final Object result;
         this.skipWhitespace();
-        // todo why not use factory method for all symbol types below?
         if (this.currentChar == -1) {
             result = null;
         } else if (Character.isDigit(this.currentChar)) {
-            result = new NumberSymbol(this.readNumber());
+            result = this.readNumber();
         } else if (Character.isJavaIdentifierStart((char) this.currentChar)) {
-            result = new IdentifierSymbol(this.readIdentifier());
-        } else {
-            final Symbol symbol = SpecialSymbol.forChar((char) this.currentChar);
-            if (symbol == null) {
-                throw new ScannerException("illegal special symbol: " + (char) this.currentChar);
-            }
+            result = this.readIdentifier();
+        } else if ("+-*/()".indexOf(this.currentChar) >= 0) {
+            final char ch = (char) this.currentChar;
             this.readNextChar();
-            result = symbol;
+            result = ch;
+        } else {
+            throw new ScannerException("illegal special symbol: " + (char) this.currentChar);
         }
         return result;
     }
@@ -54,7 +52,7 @@ public class Scanner {
         if (Character.isLetter(this.currentChar)) {
             throw new ScannerException("a number mustn't end with a letter");
         }
-        return Double.parseDouble(buf.toString());
+        return Double.valueOf(buf.toString());
     }
 
     private String readIdentifier() {

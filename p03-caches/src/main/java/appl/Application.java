@@ -1,15 +1,16 @@
-package p02.appl;
+package appl;
 
-import p02.scanner.Scanner;
-import p02.scanner.Symbol;
+import scanner.Scanner;
+import scanner.Symbol;
 
 import java.io.*;
 
 
 public class Application {
-    public static void main(String[] args) throws IOException {
 
-        try (final Reader reader = new InputStreamReader(new FileInputStream("src/zzz.txt"))) {
+    public static void main(String[] args) throws IOException {
+        InputStream resourceStream = Application.class.getResourceAsStream("/zzz.txt");
+        try (final Reader reader = new InputStreamReader(resourceStream)) {
             final Scanner scanner = new Scanner(reader);
             for (Symbol symbol = scanner.readSymbol(); symbol != null; symbol = scanner.readSymbol())
                 System.out.println(symbol);
@@ -20,6 +21,6 @@ public class Application {
         final Scanner scanner = new Scanner(new StringReader(" 123 + 456 - (789)/*hello World a1 42"));
         for (Symbol symbol = scanner.readSymbol(); symbol != null; symbol = scanner.readSymbol())
             System.out.println(symbol);
-
     }
+
 }

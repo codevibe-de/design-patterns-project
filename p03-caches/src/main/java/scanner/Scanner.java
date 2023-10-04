@@ -1,9 +1,23 @@
-package p01.scanner;
+package scanner;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Scanner {
+
+    private final Map<Double, NumberSymbol> numberSymbols = new HashMap<>();
+
+    public NumberSymbol numberSymbolOf(double value) {
+        return this.numberSymbols.computeIfAbsent(value, v -> new NumberSymbol(v));
+    }
+
+    private final Map<String, IdentifierSymbol> identifierSymbols = new HashMap<>();
+
+    public IdentifierSymbol identifierSymbolOf(String name) {
+        return this.identifierSymbols.computeIfAbsent(name, n -> new IdentifierSymbol(n));
+    }
 
     private final Reader reader;
 
@@ -14,21 +28,22 @@ public class Scanner {
         this.readNextChar();
     }
 
-    public Object readSymbol() {
-        final Object result;
+    public Symbol readSymbol() {
+        final Symbol result;
         this.skipWhitespace();
         if (this.currentChar == -1) {
             result = null;
         } else if (Character.isDigit(this.currentChar)) {
-            result = this.readNumber();
+            result = this.numberSymbolOf(this.readNumber());
         } else if (Character.isJavaIdentifierStart((char) this.currentChar)) {
-            result = this.readIdentifier();
-        } else if ("+-*/()".indexOf(this.currentChar) >= 0) {
-            final char ch = (char) this.currentChar;
-            this.readNextChar();
-            result = ch;
+            result = this.identifierSymbolOf(this.readIdentifier());
         } else {
-            throw new ScannerException("illegal special symbol: " + (char) this.currentChar);
+            final Symbol symbol = SpecialSymbol.forChar((char) this.currentChar);
+            if (symbol == null) {
+                throw new ScannerException("illegal special symbol: " + (char) this.currentChar);
+            }
+            this.readNextChar();
+            result = symbol;
         }
         return result;
     }

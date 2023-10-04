@@ -1,4 +1,4 @@
-package p02.scanner;
+package scanner;
 
 import java.util.HashMap;
 import java.util.Map;
