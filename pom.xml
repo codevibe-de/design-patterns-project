@@ -13,6 +13,7 @@
         <module>p01-start</module>
         <module>p02-symbols</module>
         <module>p03-caches</module>
+        <module>p04-command_and_query</module>
     </modules>
 
     <properties>

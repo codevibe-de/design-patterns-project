@@ -2,36 +2,54 @@ package scanner;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Scanner {
+
+    private final Map<Double, NumberSymbol> numberSymbols = new HashMap<>();
+
+    public NumberSymbol numberSymbolOf(double value) {
+        return this.numberSymbols.computeIfAbsent(value, v -> new NumberSymbol(v));
+    }
+
+    private final Map<String, IdentifierSymbol> identifierSymbols = new HashMap<>();
+
+    public IdentifierSymbol identifierSymbolOf(String name) {
+        return this.identifierSymbols.computeIfAbsent(name, n -> new IdentifierSymbol(n));
+    }
 
     private final Reader reader;
 
     private int currentChar;
+
+    private Symbol currentSymbol;
 
     public Scanner(Reader reader) {
         this.reader = reader;
         this.readNextChar();
     }
 
-    public Symbol readSymbol() {
-        final Symbol result;
+    public Symbol current() {
+        return this.currentSymbol;
+    }
+
+    public void next() {
         this.skipWhitespace();
         if (this.currentChar == -1) {
-            result = null;
+            this.currentSymbol = null;
         } else if (Character.isDigit(this.currentChar)) {
-            result = new NumberSymbol(this.readNumber());
+            this.currentSymbol = this.numberSymbolOf(this.readNumber());
         } else if (Character.isJavaIdentifierStart((char) this.currentChar)) {
-            result = new IdentifierSymbol(this.readIdentifier());
+            this.currentSymbol = this.identifierSymbolOf(this.readIdentifier());
         } else {
             final Symbol symbol = SpecialSymbol.forChar((char) this.currentChar);
             if (symbol == null) {
                 throw new ScannerException("illegal special symbol: " + (char) this.currentChar);
             }
             this.readNextChar();
-            result = symbol;
+            this.currentSymbol = symbol;
         }
-        return result;
     }
 
     private double readNumber() {
@@ -53,7 +71,7 @@ public class Scanner {
         if (Character.isLetter(this.currentChar)) {
             throw new ScannerException("a number mustn't end with a letter");
         }
-        return Double.parseDouble(buf.toString());
+        return Double.valueOf(buf.toString());
     }
 
     private String readIdentifier() {
