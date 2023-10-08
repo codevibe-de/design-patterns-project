@@ -13,7 +13,14 @@
         <module>p01-start</module>
         <module>p02-symbols</module>
         <module>p03-caches</module>
-        <module>p04-command_and_query</module>
+        <module>p04-command_query_separation</module>
+        <module>p05-interface</module>
+        <module>p06-parser</module>
+        <module>p07-expressions</module>
+        <module>p08-expressions_with_operators</module>
+        <module>p09-composite</module>
+        <module>p10-iterator</module>
+        <module>p11-expression_parser</module>
     </modules>
 
     <properties>
