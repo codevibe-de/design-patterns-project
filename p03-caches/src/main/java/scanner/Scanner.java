@@ -7,17 +7,7 @@ import java.util.Map;
 
 public class Scanner {
 
-    private final Map<Double, NumberSymbol> numberSymbols = new HashMap<>();
-
-    public NumberSymbol numberSymbolOf(double value) {
-        return this.numberSymbols.computeIfAbsent(value, v -> new NumberSymbol(v));
-    }
-
-    private final Map<String, IdentifierSymbol> identifierSymbols = new HashMap<>();
-
-    public IdentifierSymbol identifierSymbolOf(String name) {
-        return this.identifierSymbols.computeIfAbsent(name, n -> new IdentifierSymbol(n));
-    }
+    private final FlyweightFactory flyweightFactory = new FlyweightFactory();
 
     private final Reader reader;
 
@@ -29,23 +19,21 @@ public class Scanner {
     }
 
     public Symbol readSymbol() {
-        final Symbol result;
+        final Object data;
         this.skipWhitespace();
         if (this.currentChar == -1) {
-            result = null;
+            data = null;
         } else if (Character.isDigit(this.currentChar)) {
-            result = this.numberSymbolOf(this.readNumber());
+            data = this.readNumber();
         } else if (Character.isJavaIdentifierStart((char) this.currentChar)) {
-            result = this.identifierSymbolOf(this.readIdentifier());
-        } else {
-            final Symbol symbol = SpecialSymbol.forChar((char) this.currentChar);
-            if (symbol == null) {
-                throw new ScannerException("illegal special symbol: " + (char) this.currentChar);
-            }
+            data = this.readIdentifier();
+        } else if ("+-*/()".indexOf(this.currentChar) >= 0) {
+            data = (char) this.currentChar;
             this.readNextChar();
-            result = symbol;
+        } else {
+            throw new ScannerException("illegal special symbol: " + (char) this.currentChar);
         }
-        return result;
+        return flyweightFactory.getSymbol(data);
     }
 
     private double readNumber() {
@@ -92,6 +80,18 @@ public class Scanner {
             this.currentChar = this.reader.read();
         } catch (final IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    //
+    // --- inner classes ---
+    //
+
+    private class FlyweightFactory {
+        private final Map<Object, Symbol> symbols = new HashMap<>();
+
+        public Symbol getSymbol(Object data) {
+            return this.symbols.computeIfAbsent(data, v -> Symbol.of(data));
         }
     }
 }

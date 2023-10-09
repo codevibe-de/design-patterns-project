@@ -24,6 +24,7 @@ public enum SpecialSymbol implements Symbol {
 
     private static Map<Character, Symbol> symbols;
 
+    // STATIC FACTORY METHOD pattern
     public static Symbol forChar(char ch) {
         if (symbols == null) {
             symbols = new HashMap<>();

@@ -15,22 +15,22 @@ public class Scanner {
     }
 
     public Object readSymbol() {
-        final Object result;
+        final Object data;
         this.skipWhitespace();
         if (this.currentChar == -1) {
-            result = null;
+            data = null;
         } else if (Character.isDigit(this.currentChar)) {
-            result = this.readNumber();
+            data = this.readNumber();
         } else if (Character.isJavaIdentifierStart((char) this.currentChar)) {
-            result = this.readIdentifier();
+            data = this.readIdentifier();
         } else if ("+-*/()".indexOf(this.currentChar) >= 0) {
             final char ch = (char) this.currentChar;
             this.readNextChar();
-            result = ch;
+            data = ch;
         } else {
             throw new ScannerException("illegal special symbol: " + (char) this.currentChar);
         }
-        return result;
+        return data;
     }
 
     private double readNumber() {
