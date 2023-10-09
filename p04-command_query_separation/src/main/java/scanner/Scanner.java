@@ -7,17 +7,7 @@ import java.util.Map;
 
 public class Scanner {
 
-    private final Map<Double, NumberSymbol> numberSymbols = new HashMap<>();
-
-    public NumberSymbol numberSymbolOf(double value) {
-        return this.numberSymbols.computeIfAbsent(value, v -> new NumberSymbol(v));
-    }
-
-    private final Map<String, IdentifierSymbol> identifierSymbols = new HashMap<>();
-
-    public IdentifierSymbol identifierSymbolOf(String name) {
-        return this.identifierSymbols.computeIfAbsent(name, n -> new IdentifierSymbol(n));
-    }
+    final FlyweightFactory flyweightFactory = new FlyweightFactory();
 
     private final Reader reader;
 
@@ -36,20 +26,18 @@ public class Scanner {
 
     public void next() {
         this.skipWhitespace();
+        final Object data;
         if (this.currentChar == -1) {
-            this.currentSymbol = null;
+            data = null;
         } else if (Character.isDigit(this.currentChar)) {
-            this.currentSymbol = this.numberSymbolOf(this.readNumber());
+            data = this.readNumber();
         } else if (Character.isJavaIdentifierStart((char) this.currentChar)) {
-            this.currentSymbol = this.identifierSymbolOf(this.readIdentifier());
+            data = this.readIdentifier();
         } else {
-            final Symbol symbol = SpecialSymbol.forChar((char) this.currentChar);
-            if (symbol == null) {
-                throw new ScannerException("illegal special symbol: " + (char) this.currentChar);
-            }
+            data = (char) this.currentChar;
             this.readNextChar();
-            this.currentSymbol = symbol;
         }
+        this.currentSymbol = flyweightFactory.getSymbol(data);
     }
 
     private double readNumber() {
@@ -97,5 +85,20 @@ public class Scanner {
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    //
+    // --- inner classes ---
+    //
+
+    static class FlyweightFactory {
+
+        private final Map<Object, Symbol> symbols = new HashMap<>();
+
+        Symbol getSymbol(final Object data) {
+            final Object finalData = (data instanceof Number number) ? number.doubleValue() : data;
+            return this.symbols.computeIfAbsent(finalData, v -> Symbol.of(finalData));
+        }
+
     }
 }

@@ -20,21 +20,18 @@ public class Scanner {
 
     public Symbol readSymbol() {
         this.skipWhitespace();
+        final Object data;
         if (this.currentChar == -1) {
-            return null;
+            data = null;
         } else if (Character.isDigit(this.currentChar)) {
-            double data = this.readNumber();
-            return flyweightFactory.getSymbol(data);
+            data = this.readNumber();
         } else if (Character.isJavaIdentifierStart((char) this.currentChar)) {
-            String name = this.readIdentifier();
-            return flyweightFactory.getSymbol(name);
-        } else if ("+-*/()".indexOf(this.currentChar) >= 0) {
-            char ch = (char) this.currentChar;
-            this.readNextChar();
-            return flyweightFactory.getSymbol(ch);
+            data = this.readIdentifier();
         } else {
-            throw new ScannerException("unhandled current-char: " + (char) this.currentChar);
+            data = (char) this.currentChar;
+            this.readNextChar();
         }
+        return flyweightFactory.getSymbol(data);
     }
 
     private double readNumber() {

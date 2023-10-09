@@ -27,7 +27,7 @@ public class Scanner {
             data = (char) this.currentChar;
             this.readNextChar();
         }
-        return Symbol.of(data);
+        return FlyweightFactory.INSTANCE.getSymbol(data);
     }
 
     private double readNumber() {
@@ -49,7 +49,7 @@ public class Scanner {
         if (Character.isLetter(this.currentChar)) {
             throw new ScannerException("a number mustn't end with a letter");
         }
-        return Double.parseDouble(buf.toString());
+        return Double.valueOf(buf.toString());
     }
 
     private String readIdentifier() {
