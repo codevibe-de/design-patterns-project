@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Scanner {
 
-    private final FlyweightFactory flyweightFactory = new FlyweightFactory();
+    final FlyweightFactory flyweightFactory = new FlyweightFactory();
 
     private final Reader reader;
 
@@ -19,21 +19,22 @@ public class Scanner {
     }
 
     public Symbol readSymbol() {
-        final Object data;
         this.skipWhitespace();
         if (this.currentChar == -1) {
-            data = null;
+            return null;
         } else if (Character.isDigit(this.currentChar)) {
-            data = this.readNumber();
+            double data = this.readNumber();
+            return flyweightFactory.getSymbol(data);
         } else if (Character.isJavaIdentifierStart((char) this.currentChar)) {
-            data = this.readIdentifier();
+            String name = this.readIdentifier();
+            return flyweightFactory.getSymbol(name);
         } else if ("+-*/()".indexOf(this.currentChar) >= 0) {
-            data = (char) this.currentChar;
+            char ch = (char) this.currentChar;
             this.readNextChar();
+            return flyweightFactory.getSymbol(ch);
         } else {
-            throw new ScannerException("illegal special symbol: " + (char) this.currentChar);
+            throw new ScannerException("unhandled current-char: " + (char) this.currentChar);
         }
-        return flyweightFactory.getSymbol(data);
     }
 
     private double readNumber() {
@@ -87,11 +88,14 @@ public class Scanner {
     // --- inner classes ---
     //
 
-    private class FlyweightFactory {
+    static class FlyweightFactory {
+
         private final Map<Object, Symbol> symbols = new HashMap<>();
 
-        public Symbol getSymbol(Object data) {
-            return this.symbols.computeIfAbsent(data, v -> Symbol.of(data));
+        Symbol getSymbol(final Object data) {
+            final Object finalData = (data instanceof Number number) ? number.doubleValue() : data;
+            return this.symbols.computeIfAbsent(finalData, v -> Symbol.of(finalData));
         }
+
     }
 }

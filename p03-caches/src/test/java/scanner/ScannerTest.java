@@ -1,6 +1,7 @@
+package scanner;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import scanner.*;
 
 import java.io.StringReader;
 
@@ -26,9 +27,9 @@ public class ScannerTest {
     @Test
     public void testNumbersSame() {
         final Scanner s = new Scanner(new StringReader("42 3.14   77 "));
-        assertSame(s.numberSymbolOf(42), s.readSymbol());
-        assertSame(s.numberSymbolOf(3.14), s.readSymbol());
-        assertSame(s.numberSymbolOf(77), s.readSymbol());
+        assertSame(s.flyweightFactory.getSymbol(42), s.readSymbol());
+        assertSame(s.flyweightFactory.getSymbol(3.14), s.readSymbol());
+        assertSame(s.flyweightFactory.getSymbol(77), s.readSymbol());
         assertNull(s.readSymbol());
     }
 
@@ -44,9 +45,9 @@ public class ScannerTest {
     @Test
     public void testIdentifiersSame() {
         final Scanner s = new Scanner(new StringReader("hello Hello a123"));
-        assertSame(s.identifierSymbolOf("hello"), s.readSymbol());
-        assertSame(s.identifierSymbolOf("Hello"), s.readSymbol());
-        assertSame(s.identifierSymbolOf("a123"), s.readSymbol());
+        assertSame(s.flyweightFactory.getSymbol("hello"), s.readSymbol());
+        assertSame(s.flyweightFactory.getSymbol("Hello"), s.readSymbol());
+        assertSame(s.flyweightFactory.getSymbol("a123"), s.readSymbol());
         assertNull(s.readSymbol());
     }
 

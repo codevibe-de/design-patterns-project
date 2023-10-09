@@ -8,8 +8,8 @@ public interface Symbol {
             return null;
         } else if (data instanceof String name) {
             return new IdentifierSymbol(name);
-        } else if (data instanceof Double value) {
-            return new NumberSymbol(value);
+        } else if (data instanceof Number value) {
+            return new NumberSymbol(value.doubleValue());
         } else if (data instanceof Character ch) {
             return SpecialSymbol.forChar(ch);
         } else {
