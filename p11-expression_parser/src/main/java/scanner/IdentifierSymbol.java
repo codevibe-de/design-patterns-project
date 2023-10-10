@@ -17,15 +17,15 @@ public class IdentifierSymbol implements Symbol {
 
     @Override
     public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (this.getClass() != obj.getClass()) {
-			return false;
-		}
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
         final IdentifierSymbol other = (IdentifierSymbol) obj;
         return Objects.equals(this.name, other.name);
     }
