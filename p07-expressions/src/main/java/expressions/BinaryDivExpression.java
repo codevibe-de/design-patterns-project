@@ -8,6 +8,6 @@ public class BinaryDivExpression extends BinaryExpression {
 
     @Override
     public double evaluate() {
-        return this.left.evaluate() * this.right.evaluate();
+        return this.left.evaluate() / this.right.evaluate();
     }
 }
