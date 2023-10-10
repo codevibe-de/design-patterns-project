@@ -16,9 +16,9 @@ public class ParserImpl1 implements Parser {
 
     @Override
     public double parse() {
-		if (!(this.scanner.current() instanceof NumberSymbol)) {
-			throw new ParserException("number expected - but found: " + this.scanner.current());
-		}
+        if (!(this.scanner.current() instanceof NumberSymbol)) {
+            throw new ParserException("number expected - but found: " + this.scanner.current());
+        }
         return 0;
     }
 }

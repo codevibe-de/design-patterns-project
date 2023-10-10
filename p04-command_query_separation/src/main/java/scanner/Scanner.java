@@ -2,12 +2,8 @@ package scanner;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Scanner {
-
-    final FlyweightFactory flyweightFactory = new FlyweightFactory();
 
     private final Reader reader;
 
@@ -20,10 +16,12 @@ public class Scanner {
         this.readNextChar();
     }
 
+    // this is the QUERY aspect
     public Symbol current() {
         return this.currentSymbol;
     }
 
+    // this is the COMMAND aspect
     public void next() {
         this.skipWhitespace();
         final Object data;
@@ -37,7 +35,7 @@ public class Scanner {
             data = (char) this.currentChar;
             this.readNextChar();
         }
-        this.currentSymbol = flyweightFactory.getSymbol(data);
+        this.currentSymbol = FlyweightFactory.INSTANCE.getSymbol(data);
     }
 
     private double readNumber() {
@@ -87,18 +85,4 @@ public class Scanner {
         }
     }
 
-    //
-    // --- inner classes ---
-    //
-
-    static class FlyweightFactory {
-
-        private final Map<Object, Symbol> symbols = new HashMap<>();
-
-        Symbol getSymbol(final Object data) {
-            final Object finalData = (data instanceof Number number) ? number.doubleValue() : data;
-            return this.symbols.computeIfAbsent(finalData, v -> Symbol.of(finalData));
-        }
-
-    }
 }

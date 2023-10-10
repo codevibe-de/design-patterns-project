@@ -19,9 +19,9 @@ public class ParserImpl implements Parser {
     @Override
     public double parse() {
         final double value = this.parseAdditiveExpression();
-		if (this.scanner.current() != null) {
-			throw new ParserException("EOS expected - but found: " + this.scanner.current());
-		}
+        if (this.scanner.current() != null) {
+            throw new ParserException("EOS expected - but found: " + this.scanner.current());
+        }
         return value;
     }
 
@@ -31,11 +31,11 @@ public class ParserImpl implements Parser {
             final boolean plus = this.scanner.current() == SpecialSymbol.PLUS;
             this.scanner.next();
             final double v = this.parseMultiplicativeExpression();
-			if (plus) {
-				value = value + v;
-			} else {
-				value = value - v;
-			}
+            if (plus) {
+                value = value + v;
+            } else {
+                value = value - v;
+            }
         }
         return value;
     }
@@ -46,11 +46,11 @@ public class ParserImpl implements Parser {
             final boolean times = this.scanner.current() == SpecialSymbol.TIMES;
             this.scanner.next();
             final double v = this.parseAtomicExpression();
-			if (times) {
-				value = value * v;
-			} else {
-				value = value / v;
-			}
+            if (times) {
+                value = value * v;
+            } else {
+                value = value / v;
+            }
         }
         return value;
     }
@@ -66,20 +66,20 @@ public class ParserImpl implements Parser {
             value = ((NumberSymbol) this.scanner.current()).value();
             this.scanner.next();
         } else if (this.scanner.current() == SpecialSymbol.OPEN) {
-			this.scanner.next();
-			value = this.parseAdditiveExpression();
-			if (this.scanner.current() != SpecialSymbol.CLOSE) {
-				throw new ParserException(") expected - but found: " + this.scanner.current());
-			}
-			this.scanner.next();
-		} else {
-			throw new ParserException("number or ( expected - but found: " + this.scanner.current());
-		}
-		if (unary == SpecialSymbol.PLUS) {
-			value = +value;
-		} else if (unary == SpecialSymbol.MINUS) {
-			value = -value;
-		}
+            this.scanner.next();
+            value = this.parseAdditiveExpression();
+            if (this.scanner.current() != SpecialSymbol.CLOSE) {
+                throw new ParserException(") expected - but found: " + this.scanner.current());
+            }
+            this.scanner.next();
+        } else {
+            throw new ParserException("number or ( expected - but found: " + this.scanner.current());
+        }
+        if (unary == SpecialSymbol.PLUS) {
+            value = +value;
+        } else if (unary == SpecialSymbol.MINUS) {
+            value = -value;
+        }
         return value;
     }
 }

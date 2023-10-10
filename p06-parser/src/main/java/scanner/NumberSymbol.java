@@ -3,6 +3,7 @@ package scanner;
 import java.util.Objects;
 
 public class NumberSymbol implements Symbol {
+
     private final double value;
 
     public NumberSymbol(double value) {
@@ -20,15 +21,15 @@ public class NumberSymbol implements Symbol {
 
     @Override
     public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (this.getClass() != obj.getClass()) {
-			return false;
-		}
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
         final NumberSymbol other = (NumberSymbol) obj;
         return Double.doubleToLongBits(this.value) == Double.doubleToLongBits(other.value);
     }

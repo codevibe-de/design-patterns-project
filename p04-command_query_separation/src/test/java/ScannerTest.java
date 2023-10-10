@@ -29,19 +29,6 @@ public class ScannerTest {
     }
 
     @Test
-    public void testNumbersSame() {
-        final Scanner s = new Scanner(new StringReader("42 3.14   77 "));
-        s.next();
-        assertSame(s.numberSymbolOf(42), s.current());
-        s.next();
-        assertSame(s.numberSymbolOf(3.14), s.current());
-        s.next();
-        assertSame(s.numberSymbolOf(77), s.current());
-        s.next();
-        assertNull(s.current());
-    }
-
-    @Test
     public void testIdentifiers() {
         final Scanner s = new Scanner(new StringReader("hello Hello a123"));
         s.next();
@@ -50,19 +37,6 @@ public class ScannerTest {
         assertEquals(new IdentifierSymbol("Hello"), s.current());
         s.next();
         assertEquals(new IdentifierSymbol("a123"), s.current());
-        s.next();
-        assertNull(s.current());
-    }
-
-    @Test
-    public void testIdentifiersSame() {
-        final Scanner s = new Scanner(new StringReader("hello Hello a123"));
-        s.next();
-        assertSame(s.identifierSymbolOf("hello"), s.current());
-        s.next();
-        assertSame(s.identifierSymbolOf("Hello"), s.current());
-        s.next();
-        assertSame(s.identifierSymbolOf("a123"), s.current());
         s.next();
         assertNull(s.current());
     }

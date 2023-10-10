@@ -11,8 +11,12 @@ import java.io.StringReader;
 public class Application {
 
     public static void main(String[] args) throws IOException {
-        final Scanner scanner = new ScannerImpl(new StringReader("  (+6 + 3.0) * -4 "));
-        final Parser parser = new ParserImpl(scanner);
+        Scanner scanner = new ScannerImpl(new StringReader("  (+6 + 3.0) * -4 "));
+        Parser parser = new ParserImpl(scanner);
+        System.out.println(parser.parse());
+
+        scanner = new ScannerImpl(new StringReader("0.1 + 0.1 + 0.1 + 0.1 + 0.1 + 0.1 + 0.1 + 0.1 + 0.1 + 0.1"));
+        parser = new ParserImpl(scanner);
         System.out.println(parser.parse());
     }
 

@@ -22,22 +22,22 @@ public class ParserImpl5 implements Parser {
             final boolean times = this.scanner.current() == SpecialSymbol.TIMES;
             this.scanner.next();
             final double v = this.parseNumber();
-			if (times) {
-				value = value * v;
-			} else {
-				value = value / v;
-			}
+            if (times) {
+                value = value * v;
+            } else {
+                value = value / v;
+            }
         }
-		if (this.scanner.current() != null) {
-			throw new ParserException("EOS expected - but found: " + this.scanner.current());
-		}
+        if (this.scanner.current() != null) {
+            throw new ParserException("EOS expected - but found: " + this.scanner.current());
+        }
         return value;
     }
 
     private double parseNumber() {
-		if (!(this.scanner.current() instanceof NumberSymbol)) {
-			throw new ParserException("number expected - but found: " + this.scanner.current());
-		}
+        if (!(this.scanner.current() instanceof NumberSymbol)) {
+            throw new ParserException("number expected - but found: " + this.scanner.current());
+        }
         final double value = ((NumberSymbol) this.scanner.current()).value();
         this.scanner.next();
         return value;

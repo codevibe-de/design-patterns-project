@@ -40,20 +40,20 @@ public class ScannerImpl implements Scanner {
     @Override
     public void next() {
         this.skipWhitespace();
-		if (this.currentChar == -1) {
-			this.currentSymbol = null;
-		} else if (Character.isDigit(this.currentChar)) {
-			this.currentSymbol = this.numberSymbolOf(this.readNumber());
-		} else if (Character.isJavaIdentifierStart((char) this.currentChar)) {
-			this.currentSymbol = this.identifierSymbolOf(this.readIdentifier());
-		} else {
-			final Symbol symbol = SpecialSymbol.forChar((char) this.currentChar);
-			if (symbol == null) {
-				throw new ScannerException("illegal special symbol: " + (char) this.currentChar);
-			}
-			this.readNextChar();
-			this.currentSymbol = symbol;
-		}
+        if (this.currentChar == -1) {
+            this.currentSymbol = null;
+        } else if (Character.isDigit(this.currentChar)) {
+            this.currentSymbol = this.numberSymbolOf(this.readNumber());
+        } else if (Character.isJavaIdentifierStart((char) this.currentChar)) {
+            this.currentSymbol = this.identifierSymbolOf(this.readIdentifier());
+        } else {
+            final Symbol symbol = SpecialSymbol.forChar((char) this.currentChar);
+            if (symbol == null) {
+                throw new ScannerException("illegal special symbol: " + (char) this.currentChar);
+            }
+            this.readNextChar();
+            this.currentSymbol = symbol;
+        }
     }
 
     private double readNumber() {
@@ -72,9 +72,9 @@ public class ScannerImpl implements Scanner {
                 this.readNextChar();
             }
         }
-		if (Character.isLetter(this.currentChar)) {
-			throw new ScannerException("a number mustn't end with a letter");
-		}
+        if (Character.isLetter(this.currentChar)) {
+            throw new ScannerException("a number mustn't end with a letter");
+        }
         return Double.valueOf(buf.toString());
     }
 

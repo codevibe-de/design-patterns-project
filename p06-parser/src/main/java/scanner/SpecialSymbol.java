@@ -1,9 +1,9 @@
 package scanner;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
 public enum SpecialSymbol implements Symbol {
+
     PLUS('+'),
     MINUS('-'),
     TIMES('*'),
@@ -21,15 +21,12 @@ public enum SpecialSymbol implements Symbol {
         return this.ch;
     }
 
-    private static Map<Character, Symbol> symbols;
-
+    // STATIC FACTORY METHOD pattern
     public static Symbol forChar(char ch) {
-        if (symbols == null) {
-            symbols = new HashMap<>();
-            for (final SpecialSymbol symbol : values()) {
-                symbols.put(symbol.ch, symbol);
-            }
-        }
-        return symbols.get(ch);
+        // find enum represented by given character
+        return Arrays.stream(SpecialSymbol.values())
+                .filter(e -> e.ch() == ch)
+                .findFirst()
+                .orElseThrow(() -> new ScannerException("No symbol for " + ch));
     }
 }
