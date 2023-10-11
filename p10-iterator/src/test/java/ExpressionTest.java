@@ -1,7 +1,10 @@
 import expressions.BinaryExpression;
 import expressions.Expression;
 import expressions.NumberExpression;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,8 +31,8 @@ public class ExpressionTest {
     public void demo1() {
         final Expression e1 = new NumberExpression(40);
         final Expression e2 = new NumberExpression(2);
-        final Expression e = new BinaryExpression(BinaryExpression.PLUS, e1, e2);
-        this.traverse(0, e);
+        final Expression rootExp = new BinaryExpression(BinaryExpression.PLUS, e1, e2);
+        this.traverse(0, rootExp);
     }
 
     private void traverse(int indent, Expression e) {
@@ -53,4 +56,16 @@ public class ExpressionTest {
         });
     }
 
+    @Test
+    void iterator() {
+        // given: 40 + 2 * 3
+        final Expression e1 = new NumberExpression(40);
+        final Expression e2a = new NumberExpression(2);
+        final Expression e2b = new NumberExpression(3);
+        final Expression e2 = new BinaryExpression(BinaryExpression.TIMES, e2a, e2b);
+        final Expression rootExp = new BinaryExpression(BinaryExpression.PLUS, e1, e2);
+
+        // then
+        Assertions.assertThat(rootExp).containsExactly(rootExp, e1, e2, e2a, e2b);
+    }
 }
